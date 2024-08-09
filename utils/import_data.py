@@ -72,17 +72,17 @@ def load_data_optimizers(file_data, optimizers, nb_sub_per_optimizer, nb_max_var
     return X_train, y_train, X_valid, y_valid, X_test, y_test
 
 
-def prep_naive_data(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub, instance):
+def prep_naive_data(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub, variant):
 
-    if instance == "instance1" or instance == "instance2":
+    if variant == "variant1" or variant == "variant2":
         return naive_data_fixed_optimizer(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub)
-    elif instance == "instance3":
+    elif variant == "variant3":
         return naive_data_optimizers_twosubpbs(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub)
-    elif instance == "instance4" or instance == "instance5":
+    elif variant == "variant4" or variant == "variant5":
         return naive_data_optimizers_twothreesubpbs(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub)
 
 
-# Instance 1 and 2
+# variant 1 and 2
 def naive_data_fixed_optimizer(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub):
     # Validation data for naive
     idx_valid_sub1 = (np.where(X_valid[:, 0] == 1)[0]).tolist()
@@ -117,7 +117,7 @@ def naive_data_fixed_optimizer(X_train, y_train, X_valid, y_valid, X_test, y_tes
     return X_train_naive, y_train_naive, X_valid_naive, y_valid_naive, X_test_naive, y_test_naive
 
 
-# Instance 3
+# variant 3
 def naive_data_optimizers_twosubpbs(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub):
     # Validation data for naive
     idx_valid_ASGD_l1 = (np.where((X_valid[:, 0] == "ASGD") & (X_valid[:, 1] == 1))[0]).tolist()
@@ -164,7 +164,7 @@ def naive_data_optimizers_twosubpbs(X_train, y_train, X_valid, y_valid, X_test, 
     return X_train_naive, y_train_naive, X_valid_naive, y_valid_naive, X_test_naive, y_test_naive
 
 
-# Instance 4 and 5
+# variant 4 and 5
 def naive_data_optimizers_twothreesubpbs(X_train, y_train, X_valid, y_valid, X_test, y_test, var_inc_sub):
     # Validation data for naive
     idx_valid_ASGD_l1 = (np.where((X_valid[:, 0] == "ASGD") & (X_valid[:, 1] == 1))[0]).tolist()

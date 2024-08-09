@@ -1,6 +1,6 @@
 import numpy as np
 
-def draw_subpbs_candidates_instance1_2(idx_train_subs1, idx_train_subs2, idx_train_subs3):
+def draw_subpbs_candidates_variant1_2(idx_train_subs1, idx_train_subs2, idx_train_subs3):
 
     sub1_nempty = np.any(idx_train_subs1)
     sub2_nempty = np.any(idx_train_subs2)
@@ -15,8 +15,8 @@ def draw_subpbs_candidates_instance1_2(idx_train_subs1, idx_train_subs2, idx_tra
     return draw
 
 
-# Instance 3
-def draw_subpbs_candidates_instance3(idx_train_ASGD_l1, idx_train_ASGD_l2, idx_train_ADAM_l1, idx_train_ADAM_l2):
+# variant 3
+def draw_subpbs_candidates_variant3(idx_train_ASGD_l1, idx_train_ASGD_l2, idx_train_ADAM_l1, idx_train_ADAM_l2):
 
     sub_ASGD_l1_nempty = np.any(idx_train_ASGD_l1)
     sub_ASGD_l2_nempty = np.any(idx_train_ASGD_l2)
@@ -32,7 +32,7 @@ def draw_subpbs_candidates_instance3(idx_train_ASGD_l1, idx_train_ASGD_l2, idx_t
     return draw
 
 
-def draw_subpbs_candidates_instance4_5(idx_train_ASGD_l1, idx_train_ASGD_l2, idx_train_ADAM_l1, idx_train_ADAM_l2, idx_train_ADAM_l3):
+def draw_subpbs_candidates_variant4_5(idx_train_ASGD_l1, idx_train_ASGD_l2, idx_train_ADAM_l1, idx_train_ADAM_l2, idx_train_ADAM_l3):
 
     sub_ASGD_l1_nempty = np.any(idx_train_ASGD_l1)
     sub_ASGD_l2_nempty = np.any(idx_train_ASGD_l2)
