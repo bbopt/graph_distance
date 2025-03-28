@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def draw_subpbs_candidates_variant1_2(idx_train_subs1, idx_train_subs2, idx_train_subs3):
 
     sub1_nempty = np.any(idx_train_subs1)

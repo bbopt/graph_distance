@@ -1,0 +1,4 @@
+Validation Averages: {'naive': 0.708695652173913, 'graph': 0.7326086956521738, 'hybrid': 0.8239130434782608}
+Validation Standard Deviations: {'naive': np.float64(0.0588965964528003), 'graph': np.float64(0.06561473162081118), 'hybrid': np.float64(0.0549531506946284)}
+Test Averages: {'naive': 0.6021739130434784, 'graph': 0.6152173913043478, 'hybrid': 0.6652173913043478}
+Test Standard Deviations: {'naive': np.float64(0.04407203246242021), 'graph': np.float64(0.06912223085036802), 'hybrid': np.float64(0.0712433461224954)}

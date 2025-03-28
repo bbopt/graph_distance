@@ -1,7 +1,10 @@
 import math
+import numpy as np
+
 
 def scalar_div_list(list_to_div, scalar):
     return [math.ceil(x/scalar) for x in list_to_div]
+
 
 def variant_size_setup(variant, size):
     # Variant 1
@@ -82,5 +85,30 @@ def variant_size_setup(variant, size):
             nb_test_pts = scalar_div_list(nb_pts, 4)
             nb_valid_pts = scalar_div_list(nb_pts, 4)
 
+
+    return nb_pts, nb_test_pts, nb_valid_pts
+
+
+def variant_setup(variant):
+    # Variant 1
+    if variant == "variant1":
+        lists = np.array([[20, 30, 40], [30, 45, 60], [40, 60, 80], [50, 75, 100]])
+        nb_pts = np.sum(lists, axis=0)
+        nb_test_pts = scalar_div_list(nb_pts, 4)
+        nb_valid_pts = scalar_div_list(nb_pts, 4)
+
+    # Variant 2 or 3 or 4
+    elif variant == "variant2" or variant == "variant3" or variant == "variant4":
+        lists = np.array([[50, 60, 70], [75, 90, 105], [100, 120, 140], [125, 150, 175]])
+        nb_pts = np.sum(lists, axis=0)
+        nb_test_pts = scalar_div_list(nb_pts, 4)
+        nb_valid_pts = scalar_div_list(nb_pts, 4)
+
+    # Variant 5
+    elif variant == "variant5":
+        lists = np.array([[60, 70, 80], [90, 105, 120], [120, 140, 160], [150, 175, 200]])
+        nb_pts = np.sum(lists, axis=0)
+        nb_test_pts = scalar_div_list(nb_pts, 4)
+        nb_valid_pts = scalar_div_list(nb_pts, 4)
 
     return nb_pts, nb_test_pts, nb_valid_pts

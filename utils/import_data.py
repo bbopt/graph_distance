@@ -2,10 +2,17 @@ import numpy as np
 import pandas as pd
 
 
-def load_data_fix_optimizer(file_data, nb_sub, nb_max_var, nb_pts, nb_test_pts, nb_valid_pts):
+def load_data_fix_optimizer(file_data, nb_sub, nb_max_var, nb_pts, nb_test_pts, nb_valid_pts, seed_setup=0):
+
+    np.random.seed(seed_setup)
 
     # Load excel tabs, each tab related to a subproblem k+1
     data_dict = {k: pd.read_excel(file_data, 'sub' + str(k+1)).to_numpy() for k in range(nb_sub)}
+
+    # Shuffle each dataset of each subproblem: ensure it is shuffle for the subproblems
+    if seed_setup != 0:
+        for k in range(nb_sub):
+            np.random.shuffle(data_dict[k])
 
     # Separate into test, train, validation for each subproblem
     test_dict = {k: data_dict[k][0:nb_test_pts[k]] for k in range(nb_sub)}
@@ -22,10 +29,6 @@ def load_data_fix_optimizer(file_data, nb_sub, nb_max_var, nb_pts, nb_test_pts, 
         valid = np.vstack((valid, valid_dict[k]))
         train = np.vstack((train, train_dict[k]))
 
-    # Shuffle the arrays in unison
-    np.random.seed(0)
-    np.random.shuffle(test), np.random.shuffle(valid), np.random.shuffle(train)
-
     # Separate into X and y
     X_train, y_train = train[:, :-1], train[:, -1]
     X_valid, y_valid = valid[:, :-1], valid[:, -1]
@@ -35,11 +38,19 @@ def load_data_fix_optimizer(file_data, nb_sub, nb_max_var, nb_pts, nb_test_pts, 
 
 
 # optimizers = ["ASGD", "ADAM"]
-def load_data_optimizers(file_data, optimizers, nb_sub_per_optimizer, nb_max_var, nb_pts, nb_test_pts, nb_valid_pts):
+def load_data_optimizers(file_data, optimizers, nb_sub_per_optimizer, nb_max_var, nb_pts, nb_test_pts, nb_valid_pts, seed_setup=0):
+
+    np.random.seed(seed_setup)
 
     # Load excel tabs, each tab related to a subproblem k+1
     data_dict = {(opt, k): pd.read_excel(file_data, 'sub' + str(k + 1) + "_" + opt).to_numpy()
                  for opt in optimizers for k in range(nb_sub_per_optimizer[opt])}
+
+    # Shuffle each dataset of each subproblem: ensure it is shuffle for the subproblems
+    if seed_setup != 0:
+        for opt in optimizers:
+            for k in range(nb_sub_per_optimizer[opt]):
+                np.random.shuffle(data_dict[(opt, k)])
 
     # Separate into test, train, validation for each subproblem
     test_dict = {(opt, k): data_dict[(opt, k)][0:nb_test_pts[k]]
@@ -60,9 +71,8 @@ def load_data_optimizers(file_data, optimizers, nb_sub_per_optimizer, nb_max_var
             valid = np.vstack((valid, valid_dict[(opt, k)]))
             train = np.vstack((train, train_dict[(opt, k)]))
 
-    # Shuffle the arrays in unison
-    np.random.seed(0)
-    np.random.shuffle(test), np.random.shuffle(valid), np.random.shuffle(train)
+    # Shuffle the arrays in unison: extra layer of shuffle (already done on the subproblems)
+    #np.random.shuffle(test), np.random.shuffle(valid), np.random.shuffle(train)
 
     # Separate into X and y
     X_train, y_train = train[:, :-1], train[:, -1]
@@ -219,3 +229,36 @@ def naive_data_optimizers_twothreesubpbs(X_train, y_train, X_valid, y_valid, X_t
                      ("ADAM", 3): y_train[idx_train_Adam_l3]}
 
     return X_train_naive, y_train_naive, X_valid_naive, y_valid_naive, X_test_naive, y_test_naive
+
+
+# variant 3,4 and 5 for hybrid where there's a subproblem per optimizer
+def hybrid_data_optimizers(X_train, y_train, X_valid, y_valid, X_test, y_test, var_sub):
+    # Validation data for hybrid
+    idx_valid_ASGD = (np.where(X_valid[:, 0] == "ASGD")[0]).tolist()
+    idx_valid_ADAM = (np.where(X_valid[:, 0] == "ADAM")[0]).tolist()
+
+    X_valid_hybrid = {"ASGD": X_valid[np.ix_(idx_valid_ASGD, var_sub["ASGD"])],
+                      "ADAM": X_valid[np.ix_(idx_valid_ADAM, var_sub["ADAM"])]}
+    y_valid_hybrid = {"ASGD": y_valid[idx_valid_ASGD],
+                      "ADAM": y_valid[idx_valid_ADAM]}
+
+    # Test data for hybrid
+    idx_test_ASGD = (np.where(X_test[:, 0] == "ASGD")[0]).tolist()
+    idx_test_ADAM = (np.where(X_test[:, 0] == "ADAM")[0]).tolist()
+
+    X_test_hybrid = {"ASGD": X_test[np.ix_(idx_test_ASGD, var_sub["ASGD"])],
+                     "ADAM": X_test[np.ix_(idx_test_ADAM, var_sub["ADAM"])]}
+    y_test_hybrid = {"ASGD": y_test[idx_test_ASGD],
+                     "ADAM": y_test[idx_test_ADAM]}
+
+    # Train data for naive
+    idx_train_ASGD = (np.where(X_train[:, 0] == "ASGD")[0]).tolist()
+    idx_train_ADAM = (np.where(X_train[:, 0] == "ADAM")[0]).tolist()
+
+    X_train_hybrid = {"ASGD": X_train[np.ix_(idx_train_ASGD, var_sub["ASGD"])],
+                      "ADAM": X_train[np.ix_(idx_train_ADAM, var_sub["ADAM"])]}
+    y_train_hybrid = {"ASGD": y_train[idx_train_ASGD],
+                      "ADAM": y_train[idx_train_ADAM]}
+
+    return X_train_hybrid, y_train_hybrid, X_valid_hybrid, y_valid_hybrid, X_test_hybrid, y_test_hybrid
+
