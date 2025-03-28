@@ -1,2 +1,2 @@
 # graph_distance
-Supplementary material for the article "A graph-structured distance for heterogeneous datasets with meta variables"
+Supplementary material for the article "A distance for mixed-variable and hierarchical domains with meta variables"
