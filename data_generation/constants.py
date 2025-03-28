@@ -17,3 +17,6 @@ INPUT_SIZE_FASHION = 28  # size image 28*28
 INPUT_CHANNELS_FASHION = 1 # 1 channel : black and white pictures
 NUM_CLASSES_FASHION = 10
 
+INPUT_SIZE_CIFAR = 32 # size image 32*32
+INPUT_CHANNELS_CIFAR = 3 # 3 channels : RGB
+NUM_CLASSES_CIFAR = 10

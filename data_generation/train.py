@@ -4,6 +4,10 @@ import torch.optim.lr_scheduler as scheduler
 import time
 from constants import PRINT, EARLY_STOP
 
+# For testing
+from constants import *
+from CIFAR10_load import *
+from CNN_class import CNN
 
 def trainOneEpoch(model, trainLoader, optimizer, device):
     """
@@ -51,7 +55,6 @@ def train(model, trainLoader, validLoader, device, nbEpochs, opt, lr_exp, optimP
 
     # Learning rate
     learningRate = 10**lr_exp
-
 
     if optimParams == None:
         optimizer = getattr(optim, opt)(model.parameters(), lr=learningRate)
@@ -167,3 +170,25 @@ def accuracy(model, loader, device):
 
 
 
+if __name__ == "__main__":
+
+    # Small script for testing if the training and test properly works
+    trainLoader, validLoader, testLoader = load_cifar10(batch_size=128)
+    inputSize, inputChannel, numClasses = INPUT_SIZE_CIFAR, INPUT_CHANNELS_CIFAR, NUM_CLASSES_CIFAR
+
+    a = [
+        (64, 3, 1, 1, True),  # Conv1: 32 filters, 3x3 kernel, stride 1, padding 1, MaxPool 2x2
+        (128, 3, 1, 1, True),  # Conv2: 64 filters, 3x3 kernel, stride 1, padding 1, MaxPool 2x2
+        (256, 3, 1, 1, True)  # Conv3: 128 filters, 3x3 kernel, stride 1, padding 1, MaxPool 2x2
+    ]
+    b = [256]
+    model = CNN(3, 1, a, b, 0.1, "ReLU", inputSize, numClasses, inputChannel)
+
+    # Decide whether CPU or GPU is used
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # Cast model to proper hardware (CPU or GPU)
+    model = model.to(device)
+
+    model = train(model, trainLoader, validLoader, device, 25, "ASGD", -2, [-4, 0.75, 6])
+
+    print(accuracy(model, testLoader, device)[0])

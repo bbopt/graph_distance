@@ -99,7 +99,7 @@ def displayExamples(trainLoader):
 ### MAIN ###
 if __name__ == '__main__':
 
-    trainLoader, validLoader, testLoader = load_fmnist(batchSize=128)
+    trainLoader, validLoader, testLoader = load_fmnist(batch_size=128)
     print("The train set contains {} images, in {} batches".format(len(trainLoader.dataset), len(trainLoader)))
     print("The validation set contains {} images, in {} batches".format(len(validLoader.dataset), len(validLoader)))
     print("The test set contains {} images, in {} batches".format(len(testLoader.dataset), len(testLoader)))
